@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Zenovex — Digital Solutions</title>
+
+<!-- Archivo from Google Fonts (available) -->
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap" rel="stylesheet"/>
+
+<style>
+/* =============================================
+   FONT FACES — Self-hosted fallback stacks
+   Neulis Alt  → bold display (hero)
+   Lecturia    → elegant serif italic (quotes/accent)
+   Nohemi      → geometric sans (subheadings)
+   Couture     → sharp all-caps (labels/badges)
+   Archivo     → workhorse body & nav (Google Fonts)
+============================================= */
+
+/* NEULIS ALT — stack fallback: Archivo Black condensed */
+@font-face {
+  font-family: 'NeulisFallback';
+  src: local('Archivo Black');
+  font-weight: 900;
+}
+
+/* Lecturis-style: elegant italic serif */
+@font-face {
+  font-family: 'LecturisFallback';
+  src: local('Georgia');
+  font-style: italic;
+}
+
+:root {
+  /* PALETTE — Deep space noir + electric coral + ice */
+  --void:        #04040c;
+  --deep:        #07091a;
+  --surface:     #0c0f22;
+  --surface2:    #111428;
+  --border:      rgba(255,255,255,0.07);
+  --border2:     rgba(255,255,255,0.12);
+
+  --coral:       #ff4f4f;
+  --coral-dim:   rgba(255,79,79,0.15);
+  --coral-glow:  rgba(255,79,79,0.35);
+  --ice:         #c8f0ff;
+  --ice-dim:     rgba(200,240,255,0.08);
+  --gold:        #ffd166;
+
+  --text-hi:     #f2f4ff;
+  --text-mid:    #8b93b8;
+  --text-lo:     #3d4260;
+
+  /* FONT FAMILIES */
+  --f-display:   'Archivo', 'NeulisFallback', sans-serif;       /* Mega hero */
+  --f-head:      'Archivo', sans-serif;                         /* Section titles */
+  --f-serif:     'LecturisFallback', Georgia, serif;            /* Elegant italics */
+  --f-ui:        'Archivo', sans-serif;                         /* Nav, labels */
+  --f-body:      'Archivo', sans-serif;                         /* Body copy */
+
+  /* SIZING */
+  --radius:      4px;
+  --radius-lg:   10px;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--text-hi);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.65;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* GRAIN OVERLAY */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* STARFIELD */
+#stars { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--void); }
+::-webkit-scrollbar-thumb { background: var(--coral); border-radius: 2px; }
+
+/* ══════════════════════════════
+   NAV
+══════════════════════════════ */
+nav {
+  position: fixed; top:0; left:0; right:0; z-index:200;
+  padding: 1.2rem 3rem;
+  display: flex; align-items:center; justify-content:space-between;
+  background: rgba(4,4,12,0.82);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-family: var(--f-display);
+  font-weight: 900;
+  font-size: 1.4rem;
+  letter-spacing: -0.04em;
+  color: var(--text-hi);
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.logo span { color: var(--coral); }
+
+.nav-links {
+  display: flex; gap: 2.5rem; list-style: none;
+}
+.nav-links a {
+  font-family: var(--f-ui);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text-hi); }
+
+.nav-btn {
+  font-family: var(--f-ui);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--void);
+  background: var(--coral);
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.nav-btn:hover { background: #ff6b6b; box-shadow: 0 0 30px var(--coral-glow); }
+
+.hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; }
+.hamburger span { width:22px; height:1.5px; background:var(--text-hi); transition:all 0.3s; }
+
+.mobile-nav {
+  display: none; flex-direction:column; gap:0;
+  position: fixed; top:65px; left:0; right:0;
+  background: rgba(7,9,26,0.98);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  z-index:199;
+}
+.mobile-nav.open { display:flex; }
+.mobile-nav a {
+  font-family: var(--f-ui);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  text-decoration: none;
+  padding: 1.1rem 2rem;
+  border-bottom: 1px solid var(--border);
+  transition: color 0.2s, background 0.2s;
+}
+.mobile-nav a:hover { color: var(--coral); background: var(--coral-dim); }
+
+/* ══════════════════════════════
+   HERO
+══════════════════════════════ */
+.hero {
+  position: relative; z-index:10;
+  min-height: 100vh;
+  display: flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center;
+  padding: 9rem 2rem 6rem;
+  overflow: hidden;
+}
+
+/* black hole */
+.bh-wrap {
+  position: absolute;
+  top:50%; left:50%;
+  transform: translate(-50%,-62%);
+  width: 640px; height:640px;
+  pointer-events:none; z-index:1;
+}
+.bh-ring1 {
+  position:absolute; inset:0; border-radius:50%;
+  background: radial-gradient(ellipse at center,
+    #000 0%, #000 24%,
+    rgba(255,79,79,0.45) 32%,
+    rgba(255,79,79,0.2) 40%,
+    rgba(200,240,255,0.1) 50%,
+    rgba(255,79,79,0.04) 60%,
+    transparent 72%);
+  animation: bhSpin 22s linear infinite;
+}
+.bh-ring2 {
+  position:absolute; inset:10%; border-radius:50%;
+  background: radial-gradient(ellipse 130% 70% at 35% 50%,
+    rgba(255,209,102,0.25) 0%, transparent 55%);
+  animation: bhSpin 14s linear infinite reverse;
+  filter: blur(3px);
+}
+.bh-ring3 {
+  position:absolute; inset:18%; border-radius:50%;
+  background: radial-gradient(ellipse at 70% 45%,
+    rgba(200,240,255,0.2) 0%, transparent 45%);
+  animation: bhSpin 9s linear infinite;
+  filter: blur(2px);
+}
+.bh-core {
+  position:absolute; inset:28%; border-radius:50%;
+  background: #000;
+  box-shadow: 0 0 80px 40px #000, 0 0 0 2px rgba(255,79,79,0.15);
+}
+.bh-pulse {
+  position:absolute; inset:-15%; border-radius:50%;
+  background: radial-gradient(ellipse at center,
+    transparent 45%, rgba(255,79,79,0.04) 65%, transparent 80%);
+  animation: bhPulse 5s ease-in-out infinite;
+}
+@keyframes bhSpin  { to { transform:rotate(360deg); } }
+@keyframes bhPulse { 0%,100%{opacity:.6;transform:scale(1);} 50%{opacity:1;transform:scale(1.04);} }
+
+/* hero content */
+.hero-inner { position:relative; z-index:2; max-width:900px; }
+
+.hero-eyebrow {
+  display: inline-flex; align-items:center; gap:0.6rem;
+  font-family: var(--f-ui);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--coral);
+  border: 1px solid rgba(255,79,79,0.3);
+  background: rgba(255,79,79,0.06);
+  padding: 0.45rem 1.2rem;
+  border-radius: 100px;
+  margin-bottom: 2.5rem;
+  animation: fadeUp 0.9s ease both;
+}
+.eyebrow-dot {
+  width:5px; height:5px; border-radius:50%;
+  background:var(--coral);
+  animation: dotPulse 2s ease-in-out infinite;
+}
+@keyframes dotPulse {
+  0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,79,79,0.5);}
+  50%{opacity:0.6;box-shadow:0 0 0 5px rgba(255,79,79,0);}
+}
+
+/* BIG DISPLAY TYPE */
+.hero-display {
+  font-family: var(--f-display);
+  font-size: clamp(3.2rem, 9vw, 7.5rem);
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  animation: fadeUp 0.9s 0.15s ease both;
+}
+.hero-display .line-ghost {
+  display:block;
+  -webkit-text-stroke: 1.5px rgba(255,255,255,0.18);
+  color: transparent;
+}
+.hero-display .line-filled {
+  display:block;
+  color: var(--text-hi);
+}
+.hero-display .line-coral {
+  display:block;
+  color: var(--coral);
+}
+
+/* Lecturia-style elegant italic sub */
+.hero-serif {
+  font-family: var(--f-serif);
+  font-style: italic;
+  font-size: clamp(1rem, 2.5vw, 1.35rem);
+  font-weight: 400;
+  color: var(--text-mid);
+  max-width: 560px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.75;
+  animation: fadeUp 0.9s 0.3s ease both;
+}
+
+.hero-btns {
+  display: flex; gap:1rem; flex-wrap:wrap; justify-content:center;
+  margin-bottom: 3.5rem;
+  animation: fadeUp 0.9s 0.45s ease both;
+}
+.btn-coral {
+  font-family: var(--f-ui);
+  font-size: 0.82rem; font-weight:700;
+  letter-spacing: 0.08em; text-transform:uppercase;
+  color:#fff; background:var(--coral);
+  border:none; padding:1rem 2.2rem;
+  border-radius: var(--radius);
+  text-decoration:none;
+  transition:all 0.25s;
+  display:inline-flex; align-items:center; gap:0.5rem;
+}
+.btn-coral:hover { transform:translateY(-3px); box-shadow:0 12px 40px var(--coral-glow); }
+.btn-ghost {
+  font-family: var(--f-ui);
+  font-size: 0.82rem; font-weight:600;
+  letter-spacing: 0.06em; text-transform:uppercase;
+  color:var(--text-mid);
+  background:transparent;
+  border:1px solid var(--border2);
+  padding:1rem 2.2rem;
+  border-radius: var(--radius);
+  text-decoration:none;
+  transition:all 0.25s;
+  display:inline-flex; align-items:center; gap:0.5rem;
+}
+.btn-ghost:hover { color:var(--text-hi); border-color:rgba(255,255,255,0.3); }
+
+.hero-trust {
+  font-family: var(--f-ui);
+  font-size: 0.68rem; font-weight:600;
+  letter-spacing: 0.22em; text-transform:uppercase;
+  color: var(--text-lo);
+  animation: fadeUp 0.9s 0.6s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(32px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ══════════════════════════════
+   SHARED SECTION STYLES
+══════════════════════════════ */
+section { position:relative; z-index:10; padding:7rem 2rem; }
+.container { max-width:1160px; margin:0 auto; }
+
+.section-rule {
+  width:100%; height:1px;
+  background:linear-gradient(90deg,transparent,var(--border2),transparent);
+  border:none; margin:0;
+}
+
+/* Section header */
+.sh { margin-bottom:4rem; }
+.sh-label {
+  font-family: var(--f-ui);
+  font-size: 0.68rem; font-weight:700;
+  letter-spacing: 0.25em; text-transform:uppercase;
+  color: var(--coral);
+  display:block; margin-bottom:1rem;
+}
+.sh-title {
+  font-family: var(--f-display);
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.sh-title .accent { color: var(--coral); }
+.sh-title .ghost {
+  -webkit-text-stroke: 1px rgba(255,255,255,0.2);
+  color: transparent;
+}
+.sh-sub {
+  font-family: var(--f-serif);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--text-mid);
+  max-width: 520px;
+  line-height: 1.8;
+}
+
+/* CARD base */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow:hidden;
+}
+.card::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg,transparent,var(--coral),transparent);
+  opacity:0; transition:opacity 0.4s;
+}
+.card:hover { border-color:rgba(255,79,79,0.25); transform:translateY(-6px); background:var(--surface2); }
+.card:hover::before { opacity:1; }
+
+/* ══════════════════════════════
+   SERVICES
+══════════════════════════════ */
+.services-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(255px,1fr));
+  gap:1.5rem;
+}
+.srv-card { padding:2.2rem; }
+.srv-num {
+  font-family: var(--f-display);
+  font-size: 3.5rem; font-weight:900;
+  letter-spacing:-0.04em;
+  color: rgba(255,79,79,0.08);
+  line-height:1;
+  margin-bottom:1rem;
+}
+.srv-icon { font-size:1.8rem; margin-bottom:1rem; }
+.srv-card h3 {
+  font-family: var(--f-head);
+  font-size: 1.1rem; font-weight:800;
+  letter-spacing:-0.02em;
+  text-transform:uppercase;
+  margin-bottom:0.75rem;
+  color:var(--text-hi);
+}
+.srv-card p {
+  font-family: var(--f-body);
+  font-size: 0.9rem; font-weight:400;
+  color: var(--text-mid);
+  line-height:1.75;
+  margin-bottom:1.25rem;
+}
+.tagrow { display:flex; flex-wrap:wrap; gap:0.4rem; }
+.tag {
+  font-family: var(--f-ui);
+  font-size:0.65rem; font-weight:700;
+  letter-spacing:0.1em; text-transform:uppercase;
+  color:var(--coral);
+  border:1px solid rgba(255,79,79,0.22);
+  background:rgba(255,79,79,0.05);
+  padding:0.22rem 0.7rem;
+  border-radius:100px;
+}
+.tag.ice {
+  color:var(--ice);
+  border-color:rgba(200,240,255,0.2);
+  background:rgba(200,240,255,0.04);
+}
+
+/* ══════════════════════════════
+   PROCESS
+══════════════════════════════ */
+.proc-sec { background:radial-gradient(ellipse at 50% 0%,rgba(255,79,79,0.04),transparent 70%); }
+.proc-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:1.5rem;
+}
+.proc-card { padding:2.2rem; }
+.proc-card .num {
+  font-family: var(--f-display);
+  font-size: 4.5rem; font-weight:900;
+  letter-spacing:-0.05em; line-height:1;
+  -webkit-text-stroke: 1px rgba(255,79,79,0.2);
+  color:transparent;
+  margin-bottom:1rem;
+}
+.proc-card h3 {
+  font-family: var(--f-head);
+  font-size:1rem; font-weight:800;
+  letter-spacing:-0.01em; text-transform:uppercase;
+  color: var(--ice); margin-bottom:0.6rem;
+}
+.proc-card p {
+  font-family: var(--f-body);
+  font-size:0.88rem; color:var(--text-mid); line-height:1.75;
+}
+
+/* ══════════════════════════════
+   WORK / CASE STUDIES
+══════════════════════════════ */
+.work-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:1.5rem;
+}
+.work-card { padding:2.2rem; }
+.work-client {
+  font-family: var(--f-ui);
+  font-size:0.65rem; font-weight:700;
+  letter-spacing:0.18em; text-transform:uppercase;
+  color:var(--ice); margin-bottom:1rem;
+  display:inline-block;
+  border-bottom:1px solid rgba(200,240,255,0.2);
+  padding-bottom:0.4rem;
+}
+.work-card h3 {
+  font-family: var(--f-serif);
+  font-style:italic;
+  font-size:1.1rem; line-height:1.5;
+  color:var(--text-hi); margin-bottom:1rem;
+}
+.work-card p {
+  font-family:var(--f-body);
+  font-size:0.88rem; color:var(--text-mid); line-height:1.78; margin-bottom:1.5rem;
+}
+.impact-g {
+  display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;
+}
+.imp {
+  font-family:var(--f-body);
+  font-size:0.78rem; color:var(--text-mid);
+  background:rgba(255,79,79,0.04);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:0.5rem 0.7rem;
+}
+
+/* ══════════════════════════════
+   BENEFITS
+══════════════════════════════ */
+.ben-sec { background:radial-gradient(ellipse at 80% 50%,rgba(200,240,255,0.03),transparent 65%); }
+.ben-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:1.25rem;
+}
+.ben-item {
+  display:flex; gap:1.2rem;
+  padding:1.5rem;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  transition:all 0.3s;
+}
+.ben-item:hover { border-color:rgba(255,79,79,0.2); background:var(--surface2); }
+.ben-icon {
+  min-width:42px; height:42px;
+  background:rgba(255,79,79,0.07);
+  border:1px solid rgba(255,79,79,0.15);
+  border-radius:var(--radius);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.1rem;
+}
+.ben-item h4 {
+  font-family:var(--f-head);
+  font-size:0.88rem; font-weight:800;
+  letter-spacing:-0.01em; text-transform:uppercase;
+  color:var(--text-hi); margin-bottom:0.3rem;
+}
+.ben-item p {
+  font-family:var(--f-body);
+  font-size:0.83rem; color:var(--text-mid); line-height:1.65;
+}
+
+/* ══════════════════════════════
+   PRICING
+══════════════════════════════ */
+.price-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(245px,1fr));
+  gap:1.5rem;
+}
+.price-card { padding:2rem; }
+.price-card.hot {
+  border-color:rgba(255,79,79,0.35);
+  background:linear-gradient(135deg,rgba(255,79,79,0.06),rgba(200,240,255,0.03));
+}
+.hot-badge {
+  position:absolute; top:-13px; left:50%; transform:translateX(-50%);
+  font-family:var(--f-ui);
+  font-size:0.62rem; font-weight:800;
+  letter-spacing:0.15em; text-transform:uppercase;
+  background:var(--coral); color:#fff;
+  padding:0.26rem 1rem; border-radius:100px;
+  white-space:nowrap;
+}
+.pc-plan {
+  font-family:var(--f-ui);
+  font-size:0.6rem; font-weight:700;
+  letter-spacing:0.22em; text-transform:uppercase;
+  color:var(--text-lo); margin-bottom:0.5rem;
+}
+.price-card h3 {
+  font-family:var(--f-head);
+  font-size:1.2rem; font-weight:900;
+  letter-spacing:-0.03em; text-transform:uppercase;
+  color:var(--text-hi); margin-bottom:0.4rem;
+}
+.pc-sub {
+  font-family:var(--f-body);
+  font-size:0.83rem; color:var(--text-mid);
+  line-height:1.65; margin-bottom:1.25rem;
+}
+.pc-divider { border:none; border-top:1px solid var(--border); margin:1.25rem 0; }
+.pc-feats { list-style:none; display:flex; flex-direction:column; gap:0.55rem; }
+.pc-feats li {
+  font-family:var(--f-body);
+  font-size:0.83rem; color:var(--text-mid);
+  display:flex; align-items:flex-start; gap:0.6rem;
+}
+.pc-feats li::before { content:'→'; color:var(--coral); font-weight:700; font-size:0.75rem; margin-top:2px; }
+.pc-btn {
+  display:block; width:100%; text-align:center;
+  margin-top:1.5rem; padding:0.85rem;
+  font-family:var(--f-ui);
+  font-size:0.78rem; font-weight:800;
+  letter-spacing:0.1em; text-transform:uppercase;
+  border-radius:var(--radius);
+  text-decoration:none; transition:all 0.25s;
+  border:none; cursor:pointer;
+}
+.pc-btn.main { background:var(--coral); color:#fff; }
+.pc-btn.main:hover { box-shadow:0 10px 35px var(--coral-glow); transform:translateY(-2px); }
+.pc-btn.outline { border:1px solid var(--border2); color:var(--text-mid); background:transparent; }
+.pc-btn.outline:hover { border-color:var(--coral); color:var(--coral); }
+
+/* ══════════════════════════════
+   TEAM
+══════════════════════════════ */
+.team-sec { background:radial-gradient(ellipse at 20% 50%,rgba(255,79,79,0.04),transparent 60%); }
+.team-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:1.5rem;
+}
+.team-card { padding:2.2rem; text-align:center; }
+.team-card:hover { border-color:rgba(200,240,255,0.2); }
+.t-av {
+  width:72px; height:72px;
+  border-radius:50%;
+  background:radial-gradient(135deg,rgba(255,79,79,0.2),rgba(200,240,255,0.06));
+  border:1px solid rgba(255,79,79,0.25);
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto 1.2rem;
+  font-family:var(--f-display);
+  font-size:1.1rem; font-weight:900;
+  color:var(--coral);
+  box-shadow:0 0 24px rgba(255,79,79,0.12);
+  letter-spacing:-0.02em;
+}
+.team-card h4 {
+  font-family:var(--f-head);
+  font-size:0.95rem; font-weight:800;
+  letter-spacing:-0.01em; text-transform:uppercase;
+  color:var(--text-hi); margin-bottom:0.3rem;
+}
+.team-card p {
+  font-family:var(--f-ui);
+  font-size:0.62rem; font-weight:700;
+  letter-spacing:0.18em; text-transform:uppercase;
+  color:var(--text-lo);
+}
+
+/* ══════════════════════════════
+   FAQ
+══════════════════════════════ */
+.faq-col { max-width:740px; margin:0 auto; }
+.fq {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  margin-bottom:0.75rem;
+  overflow:hidden;
+  transition:border-color 0.3s;
+}
+.fq.open { border-color:rgba(255,79,79,0.25); }
+.fq-q {
+  padding:1.3rem 1.6rem;
+  font-family:var(--f-head);
+  font-size:0.9rem; font-weight:800;
+  letter-spacing:-0.01em; text-transform:uppercase;
+  color:var(--text-hi);
+  display:flex; justify-content:space-between; align-items:center;
+  cursor:pointer; user-select:none;
+  transition:color 0.2s;
+}
+.fq-q:hover { color:var(--coral); }
+.fq-arr { color:var(--text-lo); font-size:0.7rem; transition:transform 0.3s; }
+.fq.open .fq-arr { transform:rotate(180deg); color:var(--coral); }
+.fq-a { max-height:0; overflow:hidden; transition:max-height 0.4s ease; }
+.fq.open .fq-a { max-height:200px; }
+.fq-a p {
+  padding:0 1.6rem 1.3rem;
+  font-family:var(--f-body);
+  font-size:0.9rem; color:var(--text-mid); line-height:1.78;
+}
+
+/* ══════════════════════════════
+   CTA BAND
+══════════════════════════════ */
+.cta-band {
+  position:relative; overflow:hidden;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:5rem 2rem;
+  text-align:center;
+}
+.cta-band::before {
+  content:'';
+  position:absolute; top:-50%; left:50%; transform:translateX(-50%);
+  width:600px; height:600px;
+  background:radial-gradient(circle,rgba(255,79,79,0.07),transparent 70%);
+  border-radius:50%; pointer-events:none;
+}
+.cta-band h2 {
+  font-family:var(--f-display);
+  font-size:clamp(2rem,5vw,4rem);
+  font-weight:900; letter-spacing:-0.04em; text-transform:uppercase;
+  line-height:1.05; margin-bottom:1rem;
+}
+.cta-band h2 .ghost {
+  -webkit-text-stroke:1.5px rgba(255,255,255,0.2);
+  color:transparent;
+}
+.cta-band p {
+  font-family:var(--f-serif);
+  font-style:italic;
+  font-size:1.1rem; color:var(--text-mid);
+  margin-bottom:2.5rem; max-width:480px; margin-left:auto; margin-right:auto;
+  line-height:1.75;
+}
+
+/* ══════════════════════════════
+   FOOTER
+══════════════════════════════ */
+footer {
+  position:relative; z-index:10;
+  background:var(--deep);
+  border-top:1px solid var(--border);
+  padding:4rem 2rem 2rem;
+}
+.ft-inner {
+  max-width:1160px; margin:0 auto;
+  display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:3rem;
+  margin-bottom:3rem;
+}
+.ft-logo {
+  font-family:var(--f-display);
+  font-size:1.6rem; font-weight:900;
+  letter-spacing:-0.04em; text-transform:uppercase;
+  color:var(--text-hi); margin-bottom:0.75rem;
+}
+.ft-logo span { color:var(--coral); }
+.ft-brand p {
+  font-family:var(--f-body);
+  font-size:0.88rem; color:var(--text-mid);
+  line-height:1.75; max-width:240px;
+}
+.ft-col h5 {
+  font-family:var(--f-ui);
+  font-size:0.62rem; font-weight:700;
+  letter-spacing:0.22em; text-transform:uppercase;
+  color:var(--text-lo); margin-bottom:1.2rem;
+}
+.ft-col ul { list-style:none; display:flex; flex-direction:column; gap:0.65rem; }
+.ft-col ul li a {
+  font-family:var(--f-body);
+  font-size:0.88rem; color:var(--text-mid);
+  text-decoration:none; transition:color 0.2s;
+}
+.ft-col ul li a:hover { color:var(--coral); }
+.ft-bottom {
+  max-width:1160px; margin:0 auto;
+  padding-top:2rem; border-top:1px solid var(--border);
+  display:flex; justify-content:space-between; align-items:center;
+  flex-wrap:wrap; gap:1rem;
+}
+.ft-bottom p {
+  font-family:var(--f-ui);
+  font-size:0.7rem; font-weight:600;
+  letter-spacing:0.1em; text-transform:uppercase;
+  color:var(--text-lo);
+}
+
+/* ══════════════════════════════
+   WHATSAPP
+══════════════════════════════ */
+.wa {
+  position:fixed; bottom:2rem; right:2rem; z-index:300;
+  width:58px; height:58px;
+  background:#25d366; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 6px 28px rgba(37,211,102,0.38);
+  text-decoration:none; transition:all 0.3s;
+}
+.wa:hover { transform:scale(1.1); box-shadow:0 10px 40px rgba(37,211,102,0.55); }
+.wa svg { width:27px; height:27px; fill:#fff; }
+
+/* ══════════════════════════════
+   SCROLL REVEAL
+══════════════════════════════ */
+.reveal {
+  opacity:0;
+  transform:translateY(30px);
+  transition:opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.d1 { transition-delay:0.1s; }
+.reveal.d2 { transition-delay:0.2s; }
+.reveal.d3 { transition-delay:0.3s; }
+.reveal.d4 { transition-delay:0.4s; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+/* ══════════════════════════════
+   RESPONSIVE
+══════════════════════════════ */
+@media(max-width:900px){
+  nav { padding:1rem 1.5rem; }
+  .nav-links,.nav-btn { display:none; }
+  .hamburger { display:flex; }
+  .ft-inner { grid-template-columns:1fr 1fr; }
+  .ft-brand { grid-column:1/-1; }
+  .bh-wrap { width:380px; height:380px; top:44%; }
+}
+@media(max-width:540px){
+  section { padding:4rem 1.25rem; }
+  nav { padding:0.9rem 1.25rem; }
+  .ft-inner { grid-template-columns:1fr; }
+  .hero-display { letter-spacing:-0.03em; }
+  .bh-wrap { width:280px; height:280px; }
+  .hero-btns { flex-direction:column; }
+  .btn-coral,.btn-ghost { width:100%; justify-content:center; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="#" class="logo">ZEN<span>O</span>VEX</a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="https://wa.me/919487815716" class="nav-btn" target="_blank">Book a Call</a>
+  <button class="hamburger" onclick="toggleNav()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-nav" id="mobileNav">
+  <a href="#services"  onclick="closeNav()">Services</a>
+  <a href="#process"   onclick="closeNav()">Process</a>
+  <a href="#work"      onclick="closeNav()">Work</a>
+  <a href="#pricing"   onclick="closeNav()">Pricing</a>
+  <a href="#team"      onclick="closeNav()">Team</a>
+  <a href="#contact"   onclick="closeNav()">Contact</a>
+  <a href="https://wa.me/919487815716" target="_blank" style="color:var(--coral)">📲 Book a Free Call</a>
+</div>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="bh-wrap">
+    <div class="bh-pulse"></div>
+    <div class="bh-ring1"></div>
+    <div class="bh-ring2"></div>
+    <div class="bh-ring3"></div>
+    <div class="bh-core"></div>
+  </div>
+
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-dot"></span>
+      Now Serving Tiruppur &amp; Coimbatore
+    </div>
+
+    <h1 class="hero-display">
+      <span class="line-ghost">Simple Digital</span>
+      <span class="line-filled">Solutions That</span>
+      <span class="line-coral">Make You Shine</span>
+    </h1>
+
+    <p class="hero-serif">
+      We help local businesses grow online with clean websites, QR menus, and smart digital tools — fast, affordable, and built just for you.
+    </p>
+
+    <div class="hero-btns">
+      <a href="https://wa.me/919487815716" class="btn-coral" target="_blank">
+        📲 Book a Free Call
+      </a>
+      <a href="#services" class="btn-ghost">
+        Explore Services →
+      </a>
+    </div>
+
+    <p class="hero-trust">◈ Trusted by local businesses across Tiruppur &amp; Coimbatore ◈</p>
+  </div>
+</section>
+
+<hr class="section-rule"/>
+
+<!-- ── SERVICES ── -->
+<section id="services">
+  <div class="container">
+    <div class="sh reveal">
+      <span class="sh-label">◈ What We Do</span>
+      <h2 class="sh-title">Digital Solutions<br/><span class="accent">Beyond Limits</span></h2>
+      <p class="sh-sub">Simple, smart tools that help your business look great and reach more customers — no complexity, just results.</p>
+    </div>
+    <div class="services-grid">
+      <div class="card srv-card reveal d1">
+        <div class="srv-num">01</div>
+        <div class="srv-icon">🌐</div>
+        <h3>Website Creation</h3>
+        <p>Clean, professional websites — mobile-friendly, fast, and designed to impress from the very first click.</p>
+        <div class="tagrow">
+          <span class="tag">Mobile Friendly</span>
+          <span class="tag">Fast Delivery</span>
+          <span class="tag ice">Pro Design</span>
+        </div>
+      </div>
+      <div class="card srv-card reveal d2">
+        <div class="srv-num">02</div>
+        <div class="srv-icon">📱</div>
+        <h3>QR Code Menu Setup</h3>
+        <p>Say goodbye to printed menus. Customers scan and view instantly — hotels, restaurants, cloud kitchens.</p>
+        <div class="tagrow">
+          <span class="tag">Hotels</span>
+          <span class="tag">Restaurants</span>
+          <span class="tag ice">No App Needed</span>
+        </div>
+      </div>
+      <div class="card srv-card reveal d3">
+        <div class="srv-num">03</div>
+        <div class="srv-icon">🍽️</div>
+        <h3>Digital Menu Cards</h3>
+        <p>Beautiful digital menu cards for parcel &amp; takeaway customers — shareable on WhatsApp, Instagram, or as QR flyers.</p>
+        <div class="tagrow">
+          <span class="tag">Takeaway</span>
+          <span class="tag">Parcel Orders</span>
+          <span class="tag ice">WhatsApp Ready</span>
+        </div>
+      </div>
+      <div class="card srv-card reveal d4">
+        <div class="srv-num">04</div>
+        <div class="srv-icon">📈</div>
+        <h3>Online Presence &amp; Growth</h3>
+        <p>Google Business setup, social media basics, and online visibility — we help your business get found without confusion.</p>
+        <div class="tagrow">
+          <span class="tag">Google Business</span>
+          <span class="tag">Social Media</span>
+          <span class="tag ice">Local SEO</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule"/>
+
+<!-- ── PROCESS ── -->
+<section id="process" class="proc-sec">
+  <div class="container">
+    <div class="sh reveal">
+      <span class="sh-label">◈ How We Work</span>
+      <h2 class="sh-title">Our Simple,<br/><span class="ghost">Friendly</span> <span class="accent">Process</span></h2>
+      <p class="sh-sub">From the first call to final delivery — we handle everything so you can focus on your business.</p>
+    </div>
+    <div class="proc-grid">
+      <div class="card proc-card reveal d1">
+        <div class="num">01</div>
+        <h3>Understanding Your Business</h3>
+        <p>We listen to your needs, customers, and goals to plan the perfect digital solution for you.</p>
+      </div>
+      <div class="card proc-card reveal d2">
+        <div class="num">02</div>
+        <h3>Designing Your Solution</h3>
+        <p>A clean, professional design tailored to your brand and the type of business you run.</p>
+      </div>
+      <div class="card proc-card reveal d3">
+        <div class="num">03</div>
+        <h3>Building &amp; Setting Up</h3>
+        <p>We build your website, QR menu, or digital tool — fast, without any hassle for you.</p>
+      </div>
+      <div class="card proc-card reveal d4">
+        <div class="num">04</div>
+        <h3>Handover &amp; Support</h3>
+        <p>We hand over everything ready to use and stay available for updates or support anytime.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule"/>
+
+<!-- ── WORK ── -->
+<section id="work">
+  <div class="container">
+    <div class="sh reveal">
+      <span class="sh-label">◈ Our Work</span>
+      <h2 class="sh-title">Transforming<br/><span class="accent">Local Businesses</span></h2>
+      <p class="sh-sub">Real solutions delivered for businesses across Tiruppur &amp; Coimbatore.</p>
+    </div>
+    <div class="work-grid">
+      <div class="card work-card reveal d1">
+        <span class="work-client">Restaurant · Tiruppur</span>
+        <h3>"QR menu setup eliminated printing costs and improved customer experience instantly"</h3>
+        <p>A local restaurant using costly printed menus that were hard to update. We set up a QR code menu — customers scan and view instantly, owner updates at zero cost anytime.</p>
+        <div class="impact-g">
+          <div class="imp">✅ Zero Printing Cost</div>
+          <div class="imp">⚡ Faster Ordering</div>
+          <div class="imp">✨ Modern Look</div>
+          <div class="imp">🔄 Easy Updates</div>
+        </div>
+      </div>
+      <div class="card work-card reveal d2">
+        <span class="work-client">Textile Business · Coimbatore</span>
+        <h3>"A professional website helped attract new wholesale buyers and build credibility online"</h3>
+        <p>A textile shop with zero online presence. We built a clean, professional website showcasing their products — helping them reach buyers beyond their local area.</p>
+        <div class="impact-g">
+          <div class="imp">🌐 Online Visibility</div>
+          <div class="imp">📩 More Enquiries</div>
+          <div class="imp">💼 Pro Image</div>
+          <div class="imp">📱 Mobile Friendly</div>
+        </div>
+      </div>
+      <div class="card work-card reveal d3">
+        <span class="work-client">Cloud Kitchen · Tiruppur</span>
+        <h3>"Digital menu card on WhatsApp made parcel orders faster and confusion-free"</h3>
+        <p>Customers kept calling about the menu. We created a digital menu card they share on WhatsApp — making parcel orders faster, smoother, and clearer for everyone.</p>
+        <div class="impact-g">
+          <div class="imp">📞 Fewer Calls</div>
+          <div class="imp">🚀 Faster Orders</div>
+          <div class="imp">💬 WhatsApp Ready</div>
+          <div class="imp">🎨 Clean Design</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule"/>
+
+<!-- ── BENEFITS ── -->
+<section class="ben-sec">
+  <div class="container">
+    <div class="sh reveal">
+      <span class="sh-label">◈ Why Zenovex</span>
+      <h2 class="sh-title">Why Local Businesses<br/><span class="accent">Choose Us</span></h2>
+      <p class="sh-sub">We're not a big agency — we're your local digital partners who genuinely care about your growth.</p>
+    </div>
+    <div class="ben-grid">
+      <div class="ben-item reveal d1"><div class="ben-icon">💰</div><div><h4>Affordable &amp; Transparent</h4><p>No hidden charges. Fair pricing built around your actual budget and needs.</p></div></div>
+      <div class="ben-item reveal d2"><div class="ben-icon">⚡</div><div><h4>Fast Delivery</h4><p>Most projects done within days, not weeks. We respect your time.</p></div></div>
+      <div class="ben-item reveal d3"><div class="ben-icon">📍</div><div><h4>Built for Local Businesses</h4><p>We understand Tiruppur &amp; Coimbatore and design solutions that work here.</p></div></div>
+      <div class="ben-item reveal d4"><div class="ben-icon">🎯</div><div><h4>Simple &amp; Easy to Use</h4><p>No tech knowledge needed — everything delivered simply for you and your customers.</p></div></div>
+      <div class="ben-item reveal d1"><div class="ben-icon">✨</div><div><h4>Modern &amp; Professional Look</h4><p>Your business will look polished and customer-friendly from day one.</p></div></div>
+      <div class="ben-item reveal d2"><div class="ben-icon">🤝</div><div><h4>Ongoing Support</h4><p>We don't disappear after delivery — here whenever you need help or updates.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule"/>
+
+<!-- ── PRICING ── -->
+<section id="pricing">
+  <div class="container">
+    <div class="sh reveal">
+      <span class="sh-label">◈ Pricing</span>
+      <h2 class="sh-title">Simple Pricing,<br/><span class="accent">Your Project</span></h2>
+      <p class="sh-sub">No confusing packages — we price based on what you actually need. Get a fair, transparent quote.</p>
+    </div>
+    <div class="price-grid">
+      <div class="card price-card reveal d1">
+        <div class="pc-plan">Starter</div>
+        <h3>QR Menu</h3>
+        <p class="pc-sub">For food businesses starting their digital journey with a QR menu or digital card.</p>
+        <hr class="pc-divider"/>
+        <ul class="pc-feats">
+          <li>QR code menu setup</li>
+          <li>Digital menu card design</li>
+          <li>WhatsApp shareable format</li>
+          <li>1 round of revisions</li>
+          <li>Basic support</li>
+        </ul>
+        <a href="https://wa.me/919487815716" class="pc-btn outline" target="_blank">Get a Quote</a>
+      </div>
+      <div class="card price-card hot reveal d2">
+        <div class="hot-badge">◆ Most Popular</div>
+        <div class="pc-plan">Professional</div>
+        <h3>Business Website</h3>
+        <p class="pc-sub">A complete professional website for shops, services, and local businesses.</p>
+        <hr class="pc-divider"/>
+        <ul class="pc-feats">
+          <li>Up to 5 pages</li>
+          <li>Mobile-friendly design</li>
+          <li>Contact form integration</li>
+          <li>Google Maps embed</li>
+          <li>2 rounds of revisions</li>
+          <li>1 month support</li>
+        </ul>
+        <a href="https://wa.me/919487815716" class="pc-btn main" target="_blank">Get a Quote</a>
+      </div>
+      <div class="card price-card reveal d3">
+        <div class="pc-plan">Growth</div>
+        <h3>Full Digital Presence</h3>
+        <p class="pc-sub">Website + QR menu + Google Business + social setup. Best for restaurants and hotels.</p>
+        <hr class="pc-divider"/>
+        <ul class="pc-feats">
+          <li>Professional website</li>
+          <li>QR code menu setup</li>
+          <li>Google Business setup</li>
+          <li>Social media basics</li>
+          <li>Ongoing support</li>
+        </ul>
+        <a href="https://wa.me/919487815716" class="pc-btn outline" target="_blank">Get a Quote</a>
+      </div>
+      <div class="card price-card reveal d4">
+        <div class="pc-plan">Custom</div>
+        <h3>Something Specific?</h3>
+        <p class="pc-sub">Got a unique requirement? We'll build a custom plan just for you. It's free to talk.</p>
+        <hr class="pc-divider"/>
+        <ul class="pc-feats">
+          <li>Fully tailored solution</li>
+          <li>Custom timeline</li>
+          <li>Dedicated support</li>
+          <li>Flexible pricing</li>
+          <li>Free consultation</li>
+        </ul>
+        <a href="https://wa.me/919487815716" class="pc-btn outline" target="_blank">Book a Free Call</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule"/>
+
+<!-- ── TEAM ── -->
+<section id="team" class="team-sec">
+  <div class="container">
+    <div class="sh reveal">
+      <span class="sh-label">◈ Our Team</span>
+      <h2 class="sh-title">The Crew Behind<br/><span class="accent">Zenovex</span></h2>
+      <p class="sh-sub">A passionate team from Tiruppur &amp; Coimbatore, dedicated to helping local businesses grow digitally.</p>
+    </div>
+    <div class="team-grid">
+      <div class="card team-card reveal d1"><div class="t-av">SK</div><h4>Sakthi velan K</h4><p>Co-Founder</p></div>
+      <div class="card team-card reveal d2"><div class="t-av">NS</div><h4>Nithin SJ</h4><p>Co-Founder</p></div>
+      <div class="card team-card reveal d3"><div class="t-av">AJ</div><h4>Aswath Juhail S</h4><p>Co-Founder</p></div>
+      <div class="card team-card reveal d4"><div class="t-av">SV</div><h4>Sachin V</h4><p>Co-Founder</p></div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule"/>
+
+<!-- ── FAQ ── -->
+<section id="faq">
+  <div class="container">
+    <div class="sh reveal" style="text-align:center;">
+      <span class="sh-label">◈ FAQ</span>
+      <h2 class="sh-title">Questions? <span class="accent">Answered.</span></h2>
+    </div>
+    <div class="faq-col">
+      <div class="fq reveal"><div class="fq-q" onclick="tfaq(this)">What kind of businesses do you work with? <span class="fq-arr">▼</span></div><div class="fq-a"><p>We work with restaurants, hotels, cloud kitchens, shops, textile businesses, and any local business in Tiruppur &amp; Coimbatore looking to go digital.</p></div></div>
+      <div class="fq reveal"><div class="fq-q" onclick="tfaq(this)">How long does it take to complete a project? <span class="fq-arr">▼</span></div><div class="fq-a"><p>Most projects are done within 3–7 days depending on type and complexity. We give you a clear timeline before we start — no surprises.</p></div></div>
+      <div class="fq reveal"><div class="fq-q" onclick="tfaq(this)">Do I need any technical knowledge? <span class="fq-arr">▼</span></div><div class="fq-a"><p>Not at all! We handle everything technical — you just tell us what you need and we deliver it simply. Zero tech knowledge needed.</p></div></div>
+      <div class="fq reveal"><div class="fq-q" onclick="tfaq(this)">Can I update my menu or website after it's done? <span class="fq-arr">▼</span></div><div class="fq-a"><p>Yes! For QR menus, changes can be made anytime. For websites, just reach out to us — we're always here for you.</p></div></div>
+      <div class="fq reveal"><div class="fq-q" onclick="tfaq(this)">How do I get started? <span class="fq-arr">▼</span></div><div class="fq-a"><p>Simply message us on WhatsApp at +91 94878 15716. We'll understand your needs and suggest the best solution — no pressure, no commitment.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule"/>
+
+<!-- ── CTA ── -->
+<section id="contact">
+  <div class="container">
+    <div class="cta-band reveal">
+      <h2>
+        Make Your Business<br/>
+        <span class="ghost">Look</span> <span style="color:var(--coral)">Modern</span> &amp; Professional
+      </h2>
+      <p>Book a free call today — no pressure, just a friendly chat about how we can help your business grow.</p>
+      <div class="hero-btns">
+        <a href="https://wa.me/919487815716" class="btn-coral" target="_blank">📲 WhatsApp Us Now</a>
+        <a href="mailto:sakthiizz777@gmail.com" class="btn-ghost">✉️ Send an Email</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="ft-inner">
+    <div class="ft-brand">
+      <div class="ft-logo">ZEN<span>O</span>VEX</div>
+      <p>Making local businesses look global. Simple digital solutions for Tiruppur &amp; Coimbatore.</p>
+    </div>
+    <div class="ft-col">
+      <h5>Services</h5>
+      <ul>
+        <li><a href="#services">Website Creation</a></li>
+        <li><a href="#services">QR Code Menu</a></li>
+        <li><a href="#services">Digital Menu Cards</a></li>
+        <li><a href="#services">Online Presence</a></li>
+      </ul>
+    </div>
+    <div class="ft-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="#process">How We Work</a></li>
+        <li><a href="#work">Our Work</a></li>
+        <li><a href="#team">Team</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+      </ul>
+    </div>
+    <div class="ft-col">
+      <h5>Contact</h5>
+      <ul>
+        <li><a href="https://wa.me/919487815716" target="_blank">+91 94878 15716</a></li>
+        <li><a href="mailto:sakthiizz777@gmail.com">sakthiizz777@gmail.com</a></li>
+        <li><a href="https://instagram.com/_.sakthiizz._" target="_blank">@_.sakthiizz._</a></li>
+        <li><a>Tiruppur &amp; Coimbatore</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <p>© 2025 Zenovex. All rights reserved.</p>
+    <p>Tiruppur &amp; Coimbatore, Tamil Nadu</p>
+  </div>
+</footer>
+
+<!-- ── WHATSAPP ── -->
+<a class="wa" href="https://wa.me/919487815716" target="_blank" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+/* ── STARFIELD ── */
+(function(){
+  const cv = document.getElementById('stars');
+  const cx = cv.getContext('2d');
+  let W, H, stars = [];
+
+  function resize(){
+    W = cv.width  = innerWidth;
+    H = cv.height = innerHeight;
+  }
+
+  function init(){
+    stars = [];
+    const count = Math.floor(W * H / 3200);
+    for(let i = 0; i < count; i++){
+      const isGold = Math.random() > 0.96;
+      const isCoral = !isGold && Math.random() > 0.94;
+      stars.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: Math.random() * 1.4 + 0.2,
+        a: Math.random() * 0.65 + 0.1,
+        tw: Math.random() * Math.PI * 2,
+        ts: Math.random() * 0.012 + 0.003,
+        vy: Math.random() * 0.06 + 0.01,
+        gold: isGold, coral: isCoral
+      });
+    }
+  }
+
+  function draw(){
+    cx.clearRect(0, 0, W, H);
+    stars.forEach(s => {
+      s.tw += s.ts;
+      const a = s.a * (0.5 + 0.5 * Math.sin(s.tw));
+      if(s.gold)        cx.fillStyle = `rgba(255,209,102,${a})`;
+      else if(s.coral)  cx.fillStyle = `rgba(255,79,79,${a * 0.7})`;
+      else              cx.fillStyle = `rgba(210,220,255,${a})`;
+      cx.beginPath();
+      cx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      cx.fill();
+      s.y -= s.vy;
+      if(s.y < -2){ s.y = H + 2; s.x = Math.random() * W; }
+    });
+    requestAnimationFrame(draw);
+  }
+
+  resize(); init(); draw();
+  window.addEventListener('resize', () => { resize(); init(); });
+})();
+
+/* ── MOBILE NAV ── */
+function toggleNav(){ document.getElementById('mobileNav').classList.toggle('open'); }
+function closeNav(){ document.getElementById('mobileNav').classList.remove('open'); }
+
+/* ── FAQ ── */
+function tfaq(el){
+  const item = el.parentElement;
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.fq').forEach(f => f.classList.remove('open'));
+  if(!wasOpen) item.classList.add('open');
+}
+
+/* ── SCROLL REVEAL ── */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); }
+  });
+}, { threshold: 0.07 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
